@@ -1,0 +1,55 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { CartsService, CartState } from './carts.service';
+
+const AUTH_API = environment.apiUrl;
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' })
+};
+
+export interface orderItem {
+  productId: string,
+  quantity: number,
+  price: number,
+  title: string,
+  _id: string
+}
+
+export interface customerInfo {
+  firstName: string,
+  lastName: string,
+  email: string,
+  tel: string,
+  address: string
+}
+
+export interface orderInfo {
+  userId: string,
+  customerInfo: customerInfo,
+  createdDate: string,
+  status: string,
+  items: orderItem[],
+  id: string
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersService {
+  constructor(private http: HttpClient) { }
+
+  getAll(page: number, limit: number): Observable<any> {
+    return this.http.get(AUTH_API + `users?page=${page}&limit=${limit}`, httpOptions);
+  }
+
+  getOne(id: string): Observable<any> {
+    return this.http.get(AUTH_API + 'users/' + id, httpOptions);
+  }
+
+  delete(id: string): Observable<any> {
+    return this.http.delete(AUTH_API + 'users/' + id, httpOptions);
+  }
+}
